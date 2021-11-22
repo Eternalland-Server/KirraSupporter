@@ -1,0 +1,31 @@
+rewards:
+  vip:
+    currency:
+      - "money@50000000"
+      - "coins@500000"
+    items:
+      - "vip_ring@1"
+      - "vip_prefix@1"
+      - "vip_medal@1"
+      - "vip_trumpet@30"
+      - "breakthrough_stone@10"
+  svp:
+    currency:
+      - "money@100000000"
+      - "coins@1000000"
+    items:
+      - "svp_ring@1"
+      - "svp_prefix@1"
+      - "svp_medal@1"
+      - "svp_trumpet@30"
+      - "breakthrough_stone@30"
+  mvp:
+    currency:
+      - "money@500000000"
+      - "coins@3000000"
+    items:
+      - "mvp_ring@1"
+      - "mvp_prefix@1"
+      - "mvp_medal@1"
+      - "mvp_trumpet@30"
+      - "breakthrough_stone@100"
