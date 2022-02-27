@@ -8,7 +8,7 @@ rewards:
       - "vip_title@1"
       - "vip_medal@1"
       - "trumpet_vip@30"
-      - "stone_realm@10"
+      - "stone_stage@10"
   svp:
     currency:
       - "money@100000000"
@@ -17,8 +17,8 @@ rewards:
       - "svp_ring@1"
       - "svp_title@1"
       - "svp_medal@1"
-      - "trumpet_vip@30"
-      - "stone_realm@30"
+      - "trumpet_svp@30"
+      - "stone_stage@30"
   mvp:
     currency:
       - "money@500000000"
@@ -28,4 +28,4 @@ rewards:
       - "mvp_title@1"
       - "mvp_medal@1"
       - "trumpet_mvp@30"
-      - "stone_realm@100"
+      - "stone_stage@100"

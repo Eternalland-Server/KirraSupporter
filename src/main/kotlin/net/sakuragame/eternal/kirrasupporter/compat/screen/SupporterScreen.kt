@@ -1,6 +1,7 @@
 package net.sakuragame.eternal.kirrasupporter.compat.screen
 
 import com.taylorswiftcn.megumi.uifactory.generate.function.Statements
+import com.taylorswiftcn.megumi.uifactory.generate.type.ActionType
 import com.taylorswiftcn.megumi.uifactory.generate.ui.component.base.LabelComp
 import com.taylorswiftcn.megumi.uifactory.generate.ui.component.base.TextureComp
 import com.taylorswiftcn.megumi.uifactory.generate.ui.screen.ScreenUI

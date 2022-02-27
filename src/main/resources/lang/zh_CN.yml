@@ -1,2 +1,2 @@
-message-player-failed-buy: "&6&lKirraSupporter &f&o> &e您没有足够点数 / 物品去购买!"
-message-player-succ-bought: "&6&lKirraSupporter &f&o> &e您购买了 {0}"
+message-player-failed-buy: "&6&l➱ &e您没有足够点数或物品去购买!"
+message-player-succ-bought: "&6&l➱ &e您购买了 &f{0}"

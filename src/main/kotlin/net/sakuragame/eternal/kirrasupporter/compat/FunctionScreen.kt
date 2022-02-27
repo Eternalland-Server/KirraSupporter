@@ -1,28 +1,34 @@
 package net.sakuragame.eternal.kirrasupporter.compat
 
-import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompSubmitEvent
+import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompClickEvent
 import ink.ptms.zaphkiel.ZaphkielAPI
+import net.luckperms.api.model.data.DataMutateResult
+import net.luckperms.api.node.types.InheritanceNode
 import net.sakuragame.eternal.dragoncore.network.PacketSender
 import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI
 import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency
 import net.sakuragame.eternal.justmessage.api.MessageAPI
+import net.sakuragame.eternal.kirrapack.Profile.Companion.profile
+import net.sakuragame.eternal.kirrapack.pack.PackType
 import net.sakuragame.eternal.kirrasupporter.KirraSupporter
 import net.sakuragame.eternal.kirrasupporter.Reward
 import net.sakuragame.eternal.kirrasupporter.compat.screen.MVPScreen
 import net.sakuragame.eternal.kirrasupporter.compat.screen.SVPScreen
 import net.sakuragame.eternal.kirrasupporter.compat.screen.VIPScreen
-import org.bukkit.Bukkit
+import net.sakuragame.kirracore.bukkit.profile.Profile
 import org.bukkit.entity.Player
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submit
+import taboolib.platform.util.asLangText
 import taboolib.platform.util.hasItem
 import taboolib.platform.util.takeItem
+
 
 @Suppress("SpellCheckingInspection", "unused")
 object FunctionScreen {
 
     private val cardItem by lazy {
-        ZaphkielAPI.getItem("vip_card")!!.rebuildToItemStack()
+        ZaphkielAPI.getItem("vip_voucher")!!.rebuildToItemStack()
     }
 
     fun generateList(groupName: String): MutableList<Reward> {
@@ -65,7 +71,7 @@ object FunctionScreen {
 
     @Suppress("KotlinConstantConditions", "DUPLICATE_LABEL_IN_WHEN")
     @SubscribeEvent
-    fun e(e: UIFCompSubmitEvent) {
+    fun e(e: UIFCompClickEvent) {
         val player = e.player
         val key = e.compID
         if (key == "vip_buy" || key == "svp_buy" || key == "mvp_buy") {
@@ -76,13 +82,13 @@ object FunctionScreen {
         when (key) {
             "vip_buy" -> {
                 if (player.hasPermission("vip")) return
-                val hasItem = player.inventory.hasItem(1) { it.isSimilar(cardItem) }
+                val hasItem = player.inventory.hasItem(1) { it.itemMeta.displayName == cardItem.itemMeta.displayName }
                 if (!hasItem) {
                     player.closeInventory()
-                    MessageAPI.sendActionTip(player, "message-player-failed-buy")
+                    MessageAPI.sendActionTip(player, player.asLangText("message-player-failed-buy"))
                     return
                 }
-                player.inventory.takeItem(1) { it.isSimilar(cardItem) }
+                player.inventory.takeItem(1) { it.itemMeta.displayName == cardItem.itemMeta.displayName }
                 setGroup(player, "vip")
                 VIPScreen.rewards.forEach {
                     it.give(player)
@@ -101,6 +107,7 @@ object FunctionScreen {
                 if (!executeDebitFromPlayer(player, if (player.hasPermission("svp")) 300000.0 else 400000.0)) {
                     return
                 }
+                setGroup(player, "mvp")
                 MVPScreen.rewards.forEach {
                     it.give(player)
                 }
@@ -149,12 +156,28 @@ object FunctionScreen {
             GemsEconomyAPI.withdraw(player.uniqueId, value, EternalCurrency.Points, "购买会员")
             return true
         }
-        MessageAPI.sendActionTip(player, "message-player-failed-buy")
+        MessageAPI.sendActionTip(player, player.asLangText("message-player-failed-buy"))
         return false
     }
 
     private fun setGroup(player: Player, groupName: String) {
         val userData = KirraSupporter.luckPermsAPI.userManager.getUser(player.uniqueId) ?: return
-        userData.primaryGroup = groupName
+        val node = InheritanceNode.builder(groupName).value(true).build()
+        userData.data().add(node)
+        KirraSupporter.luckPermsAPI.userManager.saveUser(userData)
+        MessageAPI.sendActionTip(player, player.asLangText("message-player-succ-bought", groupName.uppercase()))
+        unlockPack(player, groupName)
+    }
+
+    private fun unlockPack(player: Player, groupName: String) {
+        val profile = player.profile() ?: return
+        val number = when (groupName) {
+            "vip" -> 3
+            "svp" -> 4
+            "mvp" -> 5
+            else -> return
+        }
+        val packType = PackType.values().first { it.index == number }
+        profile.unlock(packType, true)
     }
 }
