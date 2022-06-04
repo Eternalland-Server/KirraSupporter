@@ -46,19 +46,19 @@ object SupporterScreen {
                 TextureComp("npc_1", "ui/support/11.png")
                     .setXY("v1.x", "body.y+23")
                     .setWidth("66")
-                    .setHeight("80")
+                    .setHeight("90")
             )
             .addComponent(
                 TextureComp("npc_2", "ui/support/12.png")
                     .setXY("v2.x", "body.y+23")
                     .setWidth("69")
-                    .setHeight("80")
+                    .setHeight("90")
             )
             .addComponent(
                 TextureComp("npc_3", "ui/support/13.png")
                     .setXY("v3.x", "body.y+23")
                     .setWidth("63")
-                    .setHeight("80")
+                    .setHeight("90")
             )
             .addComponent(
                 TextureComp("adorn_1", "ui/common/quest_option_adorn.png")

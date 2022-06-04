@@ -2,11 +2,11 @@ package net.sakuragame.eternal.kirrasupporter.compat
 
 import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompClickEvent
 import ink.ptms.zaphkiel.ZaphkielAPI
-import net.luckperms.api.model.data.DataMutateResult
 import net.luckperms.api.node.types.InheritanceNode
 import net.sakuragame.eternal.dragoncore.network.PacketSender
 import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI
 import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency
+import net.sakuragame.eternal.justinventory.api.event.WarehouseOpenEvent
 import net.sakuragame.eternal.justmessage.api.MessageAPI
 import net.sakuragame.eternal.kirrapack.Profile.Companion.profile
 import net.sakuragame.eternal.kirrapack.pack.PackType
@@ -15,7 +15,7 @@ import net.sakuragame.eternal.kirrasupporter.Reward
 import net.sakuragame.eternal.kirrasupporter.compat.screen.MVPScreen
 import net.sakuragame.eternal.kirrasupporter.compat.screen.SVPScreen
 import net.sakuragame.eternal.kirrasupporter.compat.screen.VIPScreen
-import net.sakuragame.kirracore.bukkit.profile.Profile
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submit
@@ -161,10 +161,7 @@ object FunctionScreen {
     }
 
     private fun setGroup(player: Player, groupName: String) {
-        val userData = KirraSupporter.luckPermsAPI.userManager.getUser(player.uniqueId) ?: return
-        val node = InheritanceNode.builder(groupName).value(true).build()
-        userData.data().add(node)
-        KirraSupporter.luckPermsAPI.userManager.saveUser(userData)
+        KirraSupporter.plugin.server.dispatchCommand(Bukkit.getConsoleSender(), "lp user ${player.name} group set $groupName")
         MessageAPI.sendActionTip(player, player.asLangText("message-player-succ-bought", groupName.uppercase()))
         unlockPack(player, groupName)
     }
@@ -178,6 +175,6 @@ object FunctionScreen {
             else -> return
         }
         val packType = PackType.values().first { it.index == number }
-        profile.unlock(packType, true)
+        profile.unlock(packType, WarehouseOpenEvent.LockLevel.C, forceUnlock = true)
     }
 }
