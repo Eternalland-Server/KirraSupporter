@@ -2,7 +2,6 @@ package net.sakuragame.eternal.kirrasupporter.compat
 
 import com.taylorswiftcn.megumi.uifactory.event.comp.UIFCompClickEvent
 import ink.ptms.zaphkiel.ZaphkielAPI
-import net.luckperms.api.node.types.InheritanceNode
 import net.sakuragame.eternal.dragoncore.network.PacketSender
 import net.sakuragame.eternal.gemseconomy.api.GemsEconomyAPI
 import net.sakuragame.eternal.gemseconomy.currency.EternalCurrency
@@ -168,13 +167,15 @@ object FunctionScreen {
 
     private fun unlockPack(player: Player, groupName: String) {
         val profile = player.profile() ?: return
-        val number = when (groupName) {
-            "vip" -> 3
-            "svp" -> 4
-            "mvp" -> 5
+        val numbers = when (groupName) {
+            "vip" -> listOf(3)
+            "svp" -> listOf(3, 4)
+            "mvp" -> listOf(3, 4, 5)
             else -> return
         }
-        val packType = PackType.values().first { it.index == number }
-        profile.unlock(packType, WarehouseOpenEvent.LockLevel.C, forceUnlock = true)
+        numbers.forEach {
+            val packType = PackType.values().first { value -> value.index == it }
+            profile.unlock(packType, WarehouseOpenEvent.LockLevel.C, forceUnlock = true)
+        }
     }
 }
