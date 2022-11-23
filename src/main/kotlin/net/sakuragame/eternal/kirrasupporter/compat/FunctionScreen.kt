@@ -160,6 +160,7 @@ object FunctionScreen {
     }
 
     private fun setGroup(player: Player, groupName: String) {
+        player.closeInventory()
         KirraSupporter.plugin.server.dispatchCommand(Bukkit.getConsoleSender(), "lp user ${player.name} group set $groupName")
         MessageAPI.sendActionTip(player, player.asLangText("message-player-succ-bought", groupName.uppercase()))
         unlockPack(player, groupName)
